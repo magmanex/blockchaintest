@@ -17,29 +17,34 @@ beforeEach( async ()=> {
     accounts = await web3.eth.getAccounts();
 
     auth = await new web3.eth.Contract(JSON.parse(interface))
-        .deploy({data:bytecode, arguments:[[accounts[1],accounts[2]],accounts[3]]})
-        .send({from:accounts[0], gas: '1000000', value: '20000000000000000000'});
+        .deploy({data:bytecode})
+        .send({from:accounts[0], gas: '100000'});
     
 });
 
-describe('MultiAuth',()=>{
+describe('SimpleContract',()=>{
 
-    it('Testing Receiver  ', async ()=>{
-        assert.equal(await auth.methods.receiver().call(),accounts[3]);
+    it('Testing get post lenght  ', async ()=>{
+        assert.equal(await auth.methods.addPost(accounts[0],"test" , "testttest" , 12).call({from: accounts[0]}),1);
     });
 
-    it('Testing The Contract balance  ', async ()=>{
-        const bal = await auth.methods.getContractBalance().call();
-        assert.equal(bal,'20000000000000000000');   
-    }); 
-
-    it('Testing The Approval ', async ()=>{
-       await auth.methods.approve().send({from:accounts[1]}); // First approver 
-       await auth.methods.approve().send({from:accounts[2]}); // Second approver     
+    it('Testing get test  ', async ()=>{
+        try{
+            await auth.methods.addPost(accounts[0],"test" , "testttest" , 12).call({from: accounts[0]});
+        assert.equal(await auth.methods.test().call({from: accounts[0]}),1);
+        }
+        catch{}
     });
 
-    it('Testing The Receivers balance ', async ()=>{         
-      const accBal = await  web3.eth.getBalance(accounts[3]);
-      assert.ok(accBal >= 120000000000000000000);        
-     });
+    it('Testing get comment lenght  ', async ()=>{
+        try{
+            await auth.methods.addPost(accounts[0],"test" , "testttest" , 12).call({from: accounts[0]});
+        assert.equal(
+            await auth.methods.addComment(accounts[0], 0 , "testttest").call({from: accounts[0]}),1);
+        }
+        catch{}
+        
+    });
+
+
 });

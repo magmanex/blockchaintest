@@ -7,4 +7,4 @@ const sourcePath = path.resolve(__dirname,'contracts','multiauth.sol');
 const source = fs.readFileSync(sourcePath,'utf8');
 
 //console.log(solc.compile(source,1));
-module.exports = solc.compile(source,1).contracts[':MultiAuth'];
+module.exports = solc.compile(source,1).contracts[':SimpleContract'];
